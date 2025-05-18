@@ -1978,6 +1978,10 @@ const products = {
     ]
 }
 
+function formatNumber(number) {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
 function init() {
 
     document.getElementById("resouce-table-body").innerHTML = "";
@@ -2073,7 +2077,7 @@ function init() {
 
         let profit = document.createElement("td");
         let profit_element = document.createElement("p");
-        profit_element.innerHTML = "0";
+        profit_element.innerHTML = formatNumber(profit.toFixed(0));
         profit.appendChild(profit_element);
         row.appendChild(profit);
 
@@ -2093,7 +2097,7 @@ function init() {
 
         let focus_profit = document.createElement("td");
         let focus_profit_element = document.createElement("p");
-        focus_profit_element.innerHTML = "0";
+        profit_element.innerHTML = formatNumber(profit.toFixed(0));
         focus_profit.id = "focus-column";
         focus_profit.appendChild(focus_profit_element);
         row.appendChild(focus_profit);
@@ -2929,6 +2933,37 @@ function copySearchString(string) {
     }, 1200);
 }
 
+let currentSortColumn = null;
+let isAscending = true;
+
+function sortTable(columnIndex) {
+  const table = document.getElementById("resouce-table-body");
+  const rows = Array.from(table.rows);
+
+  rows.sort((a, b) => {
+    const aValue = parseFloat(a.cells[columnIndex].textContent.replace(/[^\d.-]/g, '')) || 0;
+    const bValue = parseFloat(b.cells[columnIndex].textContent.replace(/[^\d.-]/g, '')) || 0;
+    
+    if (currentSortColumn === columnIndex) {
+      isAscending = !isAscending;
+    } else {
+      currentSortColumn = columnIndex;
+      isAscending = true;
+    }
+    
+    return isAscending ? aValue - bValue : bValue - aValue;
+  });
+
+  table.innerHTML = "";
+  rows.forEach(row => table.appendChild(row));
+}
+
+document.querySelectorAll('th').forEach((th, index) => {
+  if ([5, 6, 8, 9].includes(index)) { // Kolumny: Profit, Profit%, Focus Profit, Profit/Focus
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => sortTable(index));
+  }
+});
 
 window.addEventListener("resize", handleResize);
 
