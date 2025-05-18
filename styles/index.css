@@ -63,16 +63,6 @@ input::-webkit-inner-spin-button {
 
 th {
   padding-top: 1rem;
-  cursor: pointer;
-  user-select: none;
-}
-
-th.sort-asc::after {
-    content: " ↑";
-}
-
-th.sort-desc::after {
-    content: " ↓";
 }
 
 #refining-table {
